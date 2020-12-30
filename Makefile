@@ -83,9 +83,10 @@ _devel_run:
 		-it $(UPSTREAM)/$(IMAGE):dev \
 		/bin/bash
 _devel_ui_run:
+	podman build --build-arg DEVEL=true -t $(UPSTREAM)/$(UI_IMAGE):dev config_ui
 	podman run --name "$(UI_NAME)" \
 		--env-file ./devel.env \
+		-e FLASK_ENV=development \
 		-p 5000:5000 \
 		-v $(DEVDIR)/config_ui/app:/app:Z -v $(DEVDIR)/data:/data:Z \
-		-it $(UPSTREAM)/$(UI_IMAGE):dev \
-		/bin/bash
+		-it $(UPSTREAM)/$(UI_IMAGE):dev

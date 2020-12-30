@@ -6,4 +6,4 @@ app = Flask(__name__)
 
 @app.route('/')
 def hello_world():
-    return 'Hello, World, from {}!\n'.format(gethostname())
+    return 'Hello, WORLD, from {}!\n'.format(gethostname())

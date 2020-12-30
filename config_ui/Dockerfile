@@ -1,6 +1,9 @@
 FROM registry.fedoraproject.org/fedora-minimal:33
 
+ARG DEVEL=""
+
 ENV NAME="Faros Config UI" \
+    DEVEL="$DEVEL" \
     VERSION=0.1.0 \
     ARCH=x86_64 \
     SUMMARY="Project Faros configuration web application" \
@@ -22,13 +25,13 @@ RUN INSTALL_PKGS="python3 python3-setuptools python3-pip" && \
     rpm -V $INSTALL_PKGS && \
     microdnf clean all
 
-COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY entrypoint.py /usr/local/bin/entrypoint.py
 COPY app /app
 
 RUN echo "$VERSION" > /app/VERSION.txt && \
-    pip3 install /app
+    [ "$DEVEL" ] && pip3 install -e /app || pip3 install --no-cache-dir /app
 
 USER 1001
 EXPOSE 5000
 
-CMD /usr/local/bin/entrypoint.sh
+CMD /usr/local/bin/entrypoint.py
