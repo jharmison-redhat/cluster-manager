@@ -24,13 +24,17 @@ RUN INSTALL_PKGS="python3 python3-setuptools python3-pip" && \
     microdnf update && \
     microdnf install $INSTALL_PKGS && \
     rpm -V $INSTALL_PKGS && \
-    microdnf clean all
+    microdnf clean all && \
+    mkdir -p /pre
 
 COPY entrypoint.py /usr/local/bin/entrypoint.py
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
-COPY app /app
+COPY faros_config_ui /app
+COPY faros_config /pre/faros_config
 
-RUN echo "$VERSION" > /app/VERSION.txt && \
+RUN pip3 install --no-cache-dir /pre/faros_config && \
+    rm -rf /pre && \
+    echo "$VERSION" > /app/VERSION.txt && \
     [ "$DEVEL" ] && pip3 install -e /app || pip3 install --no-cache-dir /app
 
 USER 1001

@@ -13,7 +13,7 @@ build: clean_container _build_app _build_ui
 _build_app:
 	podman build -t $(UPSTREAM)/$(IMAGE):dev .
 _build_ui:
-	podman build -t $(UPSTREAM)/$(UI_IMAGE):dev config_ui
+	podman build -t $(UPSTREAM)/$(UI_IMAGE):dev config
 
 clean: clean_container clean_app_image
 clean_container:
@@ -83,9 +83,9 @@ _devel_run:
 		-it $(UPSTREAM)/$(IMAGE):dev \
 		/bin/bash
 _devel_ui_run:
-	podman build --build-arg DEVEL=true -t $(UPSTREAM)/$(UI_IMAGE):dev config_ui
+	podman build --build-arg DEVEL=true -t $(UPSTREAM)/$(UI_IMAGE):dev config
 	podman run --name "$(UI_NAME)" \
 		--env-file ./devel.env \
 		-p 5000:5000 \
-		-v $(DEVDIR)/config_ui/app:/app:Z -v $(DEVDIR)/data:/data:Z \
+		-v $(DEVDIR)/config/faros_config_ui:/app:Z -v $(DEVDIR)/data:/data:Z \
 		-it $(UPSTREAM)/$(UI_IMAGE):dev
