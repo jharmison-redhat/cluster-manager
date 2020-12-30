@@ -15,6 +15,8 @@ COPY requirements.txt /deps/python_requirements.txt
 COPY requirements.yml /deps/ansible_requirements.yml
 COPY home /root
 COPY pre /pre
+COPY config/faros_config /pre/faros_config
+
 RUN set -ex; \
     microdnf update; \
     microdnf install python3 jq openssh-clients tar sshpass findutils telnet less; \

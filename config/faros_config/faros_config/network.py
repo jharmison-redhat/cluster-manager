@@ -1,6 +1,6 @@
 from ipaddress import IPv4Address, IPv6Address, IPv4Network, IPv6Network
 from pydantic import BaseModel, constr
-from typing import List, Union
+from typing import List, Optional, Union
 
 from .common import StrEnum
 
@@ -34,7 +34,7 @@ class DhcpConfig(BaseModel):
 class LanConfig(BaseModel):
     subnet: Union[IPv4Network, IPv6Network]
     interfaces: List[str]
-    dns_forward_resolvers: List[Union[IPv4Address, IPv6Address]]
+    dns_forward_resolvers: Optional[List[Union[IPv4Address, IPv6Address]]]
     dhcp: DhcpConfig
 
 
