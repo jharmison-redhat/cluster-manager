@@ -17,6 +17,7 @@ LABEL summary="$SUMMARY" \
       description="$DESCRIPTION" \
       name="$FGC/$NAME" \
       version="$VERSION" \
+      is_devel="$DEVEL" \
       maintainer="James Harmison (jharmison@redhat.com)"
 
 RUN INSTALL_PKGS="python3 python3-setuptools python3-pip" && \
@@ -26,6 +27,7 @@ RUN INSTALL_PKGS="python3 python3-setuptools python3-pip" && \
     microdnf clean all
 
 COPY entrypoint.py /usr/local/bin/entrypoint.py
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 COPY app /app
 
 RUN echo "$VERSION" > /app/VERSION.txt && \
@@ -34,4 +36,4 @@ RUN echo "$VERSION" > /app/VERSION.txt && \
 USER 1001
 EXPOSE 5000
 
-CMD /usr/local/bin/entrypoint.py
+CMD /usr/local/bin/entrypoint.sh
