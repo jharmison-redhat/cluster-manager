@@ -1,4 +1,5 @@
 from flask import Flask, jsonify
+from pydantic import ValidationError
 
 from .config import config
 
@@ -15,6 +16,8 @@ def health():
     try:
         _ = config().to_json()
         return jsonify({'health': 'ok'})
+    except ValidationError as e:
+        return jsonify({'health': 'bad', 'validation_errors': e.errors()})
     except Exception as e:
         return jsonify({'health': 'bad', 'message': str(e)})
 
