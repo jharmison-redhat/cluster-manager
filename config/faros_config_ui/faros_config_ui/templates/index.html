@@ -1,0 +1,26 @@
+{% extends 'bootstrap/base.html' %}
+{% block content %}
+
+  <div class="formwrapper">
+    <h2 class="title">Configuration</h2>
+    <form method="POST">
+      {{ form.csrf_token }}
+
+      <fieldset class="form-field">
+        {{ form.port_forward.label }}
+        {{ form.port_forward }}
+        {% if form.port_forward.errors %}
+          <ul class="errors">
+            {% for error in form.port_forward.errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </fieldset>
+
+      {{ form.submit }}
+
+      </form>
+  </div>
+
+{% endblock %}

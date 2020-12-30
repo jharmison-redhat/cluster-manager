@@ -1,27 +1,16 @@
-from flask import Flask, jsonify
-from pydantic import ValidationError
+from flask import Flask, redirect, url_for
+from flask_bootstrap import Bootstrap
 
-from .config import config
+from .api import api
+from .forms import form_bp
 
 app = Flask(__name__)
+app.register_blueprint(api, url_prefix='/api')
+app.register_blueprint(form_bp, url_prefix='/form')
+app.config['SECRET_KEY'] = 'ultra secure'
+Bootstrap(app)
 
 
 @app.route('/')
-def redirect():
-    return jsonify({'allowed_urls': ['/health', '/config']})
-
-
-@app.route('/health')
-def health():
-    try:
-        _ = config().to_json()
-        return jsonify({'health': 'ok'})
-    except ValidationError as e:
-        return jsonify({'health': 'bad', 'validation_errors': e.errors()})
-    except Exception as e:
-        return jsonify({'health': 'bad', 'message': str(e)})
-
-
-@app.route('/config')
-def get_config():
-    return config().to_json()
+def index():
+    return redirect(url_for('config_form.index'))
