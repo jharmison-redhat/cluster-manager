@@ -16,4 +16,4 @@ def health():
 @app.route('/config')
 def config():
     config = FarosConfig.from_yaml('/data/config.yml')
-    return jsonify(config)
+    return config.to_json()
