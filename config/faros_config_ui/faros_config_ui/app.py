@@ -15,8 +15,8 @@ def health():
     try:
         _ = config().to_json()
         return jsonify({'health': 'ok'})
-    except:  # noqa: E722
-        return jsonify({'health': 'bad'})
+    except Exception as e:
+        return jsonify({'health': 'bad', 'message': str(e)})
 
 
 @app.route('/config')
