@@ -1,24 +1,14 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-    <head>
-        {% block head %}
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-        {% block styles %}
-            <!-- Bootstrap CSS -->
-            {{ bootstrap.load_css() }}
-        {% endblock %}
-
-        <title>Project Faros Configuration</title>
-        {% endblock %}
-    </head>
-    <body>
-        {% block content %}{% endblock %}
-
-        {% block scripts %}
-            {{ bootstrap.load_js() }}
-        {% endblock %}
-    </body>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" type="text/css" href="/css/patternfly.css">
+  <link rel="stylesheet" type="text/css" href="/css/patternfly-additions.css">
+  {% block head %}{% endblock %}
+</head>
+<body>
+  {% block content %}{% endblock %}
+  <script src="/js/bootstrap.js"></script>
+  <script src="/js/patternfly.js"></script>
+</body>
 </html>

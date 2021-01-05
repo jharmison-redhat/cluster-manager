@@ -5,10 +5,10 @@ import yaml
 
 from .config import clean_config_file, config, raw_config, schema_json
 
-api = Blueprint('config_api', __name__, template_folder='templates')
+api_bp = Blueprint('config_api', __name__, template_folder='templates')
 
 
-@api.route('/')
+@api_bp.route('/')
 def index():
     allowed_urls = [
         'health',
@@ -24,7 +24,7 @@ def index():
     })
 
 
-@api.route('/health')
+@api_bp.route('/health')
 def health():
     try:
         _ = config().to_json()
@@ -35,12 +35,12 @@ def health():
         return jsonify({'health': 'bad', 'message': str(e)})
 
 
-@api.route('/config')
+@api_bp.route('/config')
 def get_config():
     return config().to_json()
 
 
-@api.route('/config', methods=['POST'])
+@api_bp.route('/config', methods=['POST'])
 def post_config():
     if 'yaml' in request.files:
         new_config_file = request.files['yaml']
@@ -59,6 +59,6 @@ def post_config():
         return jsonify({'status': 'no file'})
 
 
-@api.route('/config/schema')
+@api_bp.route('/config/schema')
 def schema():
     return schema_json()
