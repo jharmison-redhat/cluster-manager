@@ -1,44 +1,16 @@
 {% extends 'base.html' %}
+{% import 'form_macros.html' as macros %}
+
 {% block content %}
 <div class="container">
 
   <div class="formwrapper">
     <h2 class="title">Project Faros Configuration</h2>
     <form method="POST">
-      {{ form.csrf_token }}
-
-{% set form_fields = [
-  form.port_forward,
-  form.subnet,
-  form.interfaces,
-  form.dns_forward_resolvers,
-  form.become_pass,
-  form.pull_secret,
-  form.management_provider,
-  form.management_username,
-  form.management_password,
-  form.proxy_http,
-  form.proxy_https,
-  form.noproxy,
-  form.proxy_ca
-] %}
-
-{% for field in form_fields %}
-      <fieldset class="form-field">
-        {{ field.label }}
-        {{ field }}
-        {% if field.errors %}
-          <ul class="errors">
-            {% for error in field.errors %}
-            <li>{{ error }}</li>
-            {% endfor %}
-          </ul>
-        {% endif %}
-      </fieldset>
+{% for field in form %}
+    {{ macros.render_field(field) }}
 {% endfor %}
-
-      {{ form.submit }}
-      </form>
+    </form>
   </div>
 
 </div>

@@ -46,7 +46,11 @@ class ConfigForm(FlaskForm):
             double_str('HTTPS to Cockpit Panel'),
         ]
     )
-    subnet = StringField('FarosLAN Subnet', [validators.required()])
+    subnet = StringField(
+        'FarosLAN Subnet',
+        [validators.required()],
+        default='192.168.8.0/24'
+    )
     interfaces = MultiCheckboxField(
         'Interfaces to include on FarosLAN bridge',
         [validators.required()],
@@ -55,14 +59,13 @@ class ConfigForm(FlaskForm):
     dns_forward_resolvers = TextAreaField(
         'List of forwarding DNS resolvers'
     )
-    become_pass = StringField(
+    become_pass = PasswordField(
         'Sudo password for your bastion user',
         [validators.required()]
     )
     pull_secret = PasswordField(
         'Pull secret from cloud.redhat.com',
-        [validators.required()],
-        widget=widgets.TextArea()
+        [validators.required()]
     )
     management_provider = SelectField(
         'Node Management Provider',
