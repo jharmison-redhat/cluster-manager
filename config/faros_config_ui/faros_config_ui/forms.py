@@ -27,12 +27,12 @@ form_bp = Blueprint('config_form', __name__, template_folder='templates')
 
 
 @form_bp.route('/', methods=['GET', 'POST'])
-def index():
+def form():
     form = ConfigForm()
     if form.validate_on_submit():
         return redirect(url_for('config_form.validate'))
     return render_template(
-        'index.html',
+        'form.html',
         form=form
     )
 

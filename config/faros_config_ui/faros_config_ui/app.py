@@ -11,7 +11,7 @@ app.config['SECRET_KEY'] = 'ultra secure'
 
 @app.route('/')
 def index():
-    return redirect(url_for('config_form.index'))
+    return redirect(url_for('config_form.form'))
 
 
 @app.route('/js/<path:path>')
