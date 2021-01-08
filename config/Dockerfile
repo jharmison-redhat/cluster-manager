@@ -42,6 +42,8 @@ COPY faros_config_ui /app
 COPY faros_config /pre/faros_config
 
 # Application installation
+# TODO: Need to add the fonts somehow.
+#   Don't want to resort to NPM, but may have to.
 RUN pip3 install --no-cache-dir /pre/faros_config && \
     rm -rf /pre && \
     echo "$VERSION" > /app/VERSION.txt && \
