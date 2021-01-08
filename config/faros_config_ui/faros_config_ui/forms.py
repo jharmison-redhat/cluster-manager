@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request
 from ipaddress import ip_network
 from pydantic import ValidationError
+from wtforms import Field
 
 from faros_config import FarosConfig
 from faros_config_ui.form_data.configform import ConfigForm

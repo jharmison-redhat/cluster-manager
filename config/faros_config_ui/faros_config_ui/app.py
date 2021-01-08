@@ -1,4 +1,10 @@
-from flask import Flask, redirect, url_for, send_from_directory
+from flask import (
+    Flask,
+    redirect,
+    render_template,
+    url_for,
+    send_from_directory
+)
 
 from .api import api_bp
 from .forms import form_bp
@@ -22,3 +28,8 @@ def send_js(path: str):
 @app.route('/css/<path:path>')
 def send_css(path: str):
     return send_from_directory('static/css', path)
+
+
+@app.route('/fonts/<path:path>')
+def send_fonts(path: str):
+    return send_from_directory('static/fonts', path)

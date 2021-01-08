@@ -6,7 +6,5 @@ data
 venv
 devel.env
 data.tgz
-bootstrap.js
-patternfly.js
-patternfly.css
-patternfly-additions.css
+config/faros_config_ui/faros_config_ui/static/*
+!config/faros_config_ui/faros_config_ui/static/.gitkeep

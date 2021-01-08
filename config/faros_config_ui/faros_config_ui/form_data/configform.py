@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import (
+    FormField,
     PasswordField,
     SelectField,
     SelectMultipleField,
@@ -11,6 +12,9 @@ from wtforms import (
 )
 from typing import Tuple
 
+
+# TODO: Add validators that use pydantic checking and produce verbose errors on
+# the forms.
 
 def double_str(item: str) -> Tuple[str, str]:
     return (item, item,)
@@ -27,12 +31,10 @@ class MultiCheckboxField(SelectMultipleField):
     option_widget = widgets.CheckboxInput()
 
 
-# TODO: Add validators that use pydantic checking and produce verbose errors on
-# the form.
-class ConfigForm(FlaskForm):
-    """Faros Configuration Form"""
+class NetworkForm(FlaskForm):
+    """Networking configuration form"""
     port_forward = MultiCheckboxField(
-        'Services to Enable',
+        'Services',
         [],
         choices=[
             double_str('SSH to Bastion'),
@@ -40,52 +42,106 @@ class ConfigForm(FlaskForm):
             double_str('HTTP to Cluster Apps'),
             double_str('HTTPS to Cluster Apps'),
             double_str('HTTPS to Cockpit Panel'),
-        ]
+        ],
+        description=('Select the services that should be forwarded through the'
+                     " bastion's gateway.")
     )
     subnet = StringField(
-        'FarosLAN Subnet',
+        'Subnet',
         [validators.required()],
-        default='192.168.8.0/24'
+        default='192.168.8.0/24',
+        description=('Enter the subnet to use for the FarosLAN network in CIDR'
+                     ' notation.')
     )
     interfaces = MultiCheckboxField(
-        'Interfaces to include on FarosLAN bridge',
+        'Interfaces',
         [validators.required()],
-        choices=[double_str('eno{}'.format(num + 1)) for num in range(5)]
+        choices=[double_str('eno{}'.format(num + 1)) for num in range(5)],
+        description=('Select the bastion interfaces to place on the FarosLAN'
+                     ' network.')
     )
     dns_forward_resolvers = TextAreaField(
-        'List of forwarding DNS resolvers'
+        'Upstream DNS',
+        description=('Enter a newline-delimited list of all upstream DNS'
+                     ' resolvers you would like to use, if different than'
+                     ' those from the WAN DHCP.')
     )
+
+
+class SecretsForm(FlaskForm):
+    """Secret configuration form"""
     become_pass = PasswordField(
-        'Sudo password for your bastion user',
-        [validators.required()]
+        'Sudo password',
+        [validators.required()],
+        description=('Enter the password required to sudo as your'
+                     ' administrative user on the bastion host.')
     )
     pull_secret = PasswordField(
-        'Pull secret from cloud.redhat.com',
-        [validators.required()]
-    )
-    management_provider = SelectField(
-        'Node Management Provider',
+        'Pull secret',
         [validators.required()],
-        choices=[('ilo', 'iLO',)]
+        description=('Enter your pull secret, acquired from '
+                     'https://cloud.redhat.com.')
+    )
+
+
+class ManagementForm(FlaskForm):
+    """Management provider configuration form"""
+    management_provider = SelectField(
+        'Provider',
+        [validators.required()],
+        choices=[('ilo', 'iLO',)],
+        description='Select management provider type.'
     )
     management_username = StringField(
-        'Username for Management Provider',
-        [validators.required()]
+        'Username',
+        [validators.required()],
+        description='Enter your management provider user name.'
     )
     management_password = PasswordField(
-        'Password for Management Provider',
-        [validators.required()]
+        'Password',
+        [validators.required()],
+        description='Enter your management provider password.'
     )
+
+
+class ProxyForm(FlaskForm):
+    """Proxy configuration form"""
     proxy_http = StringField(
-        'Proxy HTTP endpoint'
+        'HTTP',
+        description='Enter the proxy HTTP endpoint'
     )
     proxy_https = StringField(
-        'Proxy HTTPS endpoint'
+        'HTTPS',
+        description='Enter the proxy HTTPS endpoint'
     )
     noproxy = TextAreaField(
-        'List of sites to ignore proxy settings'
+        'Ignore',
+        description=('Enter a newline-delimited list of the websites that'
+                     ' should bypass the proxy.')
     )
     proxy_ca = TextAreaField(
-        'Proxy Certificate Authority PEM text'
+        'CA',
+        description=('Enter the full Certificate Authority for the HTTPS'
+                     'proxy in PEM format.')
+    )
+
+
+class ConfigForm(FlaskForm):
+    """Faros Configuration Form"""
+    network = FormField(
+        NetworkForm,
+        description='Configuration of the FarosLAN Network'
+    )
+    secrets = FormField(
+        SecretsForm,
+        description='Configuration of secrets necessary for Faros deployment'
+    )
+    management = FormField(
+        ManagementForm,
+        description='Configuration of the Management Provider for nodes'
+    )
+    proxy = FormField(
+        ProxyForm,
+        description='Configuration of an outbound HTTP/S proxy'
     )
     submit = SubmitField('Submit')

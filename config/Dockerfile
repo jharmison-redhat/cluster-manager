@@ -3,12 +3,14 @@ FROM registry.fedoraproject.org/fedora-minimal:33
 ARG DEVEL=""
 ARG VERSION=0.1.0
 ARG PATTERNFLY_VERSION=3.59.5
+ARG PATTERNFLY_JQUERY_VERSION=3.4.1
 ARG PATTERNFLY_BOOTSTRAP_VERSION=3.3.7
 
 ENV NAME="Faros Config UI" \
     DEVEL="$DEVEL" \
     VERSION="$VERSION" \
     PATTERNFLY_VERSION="$PATTERNFLY_VERSION" \
+    PATTERNFLY_JQUERY_VERSION="$PATTERNFLY_JQUERY_VERSION" \
     PATTERNFLY_BOOTSTRAP_VERSION="$PATTERNFLY_BOOTSTRAP_VERSION" \
     ARCH=x86_64 \
     SUMMARY="Project Faros configuration web application" \
@@ -45,6 +47,8 @@ RUN pip3 install --no-cache-dir /pre/faros_config && \
     echo "$VERSION" > /app/VERSION.txt && \
     curl -Lo /app/faros_config_ui/static/js/bootstrap.js \
         https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/$PATTERNFLY_BOOTSTRAP_VERSION/js/bootstrap.min.js && \
+    curl -Lo /app/faros_config_ui/static/js/jquery.js \
+        https://cdnjs.cloudflare.com/ajax/libs/jquery/$PATTERNFLY_JQUERY_VERSION/jquery.min.js && \
     curl -Lo /app/faros_config_ui/static/js/patternfly.js \
         https://cdnjs.cloudflare.com/ajax/libs/patternfly/$PATTERNFLY_VERSION/js/patternfly.min.js && \
     curl -Lo /app/faros_config_ui/static/css/patternfly.css \

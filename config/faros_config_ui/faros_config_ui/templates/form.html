@@ -1,17 +1,49 @@
 {% extends 'base.html' %}
 {% import 'form_macros.html' as macros %}
 
+{% block head %}
+<style>
+  ul.empty {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container">
-
   <div class="formwrapper">
     <h2 class="title">Project Faros Configuration</h2>
-    <form method="POST">
-{% for field in form %}
-    {{ macros.render_field(field) }}
-{% endfor %}
-    </form>
+    <div id="pf-list-simple-expansion" class="list-group list-view-pf list-view-pf-view">
+      <form method="POST">
+        {% for field in form %}
+        {{ macros.render_field(field) }}
+        {% endfor %}
+      </form>
+    </div>
   </div>
-
 </div>
+{% endblock %}
+
+{% block script %}
+<script>
+  $(document).ready(function () {
+    // toggle dropdown menu
+    $("#pf-list-simple-expansion .list-view-pf-actions").on('show.bs.dropdown', function () {
+      var $this = $(this);
+      var $dropdown = $this.find('.dropdown');
+      var space = $(window).height() - $dropdown[0].getBoundingClientRect().top - $this.find('.dropdown-menu').outerHeight(true);
+      $dropdown.toggleClass('dropup', space < 10);
+    });
+
+    // click the list-view heading then expand a row
+    $("#pf-list-simple-expansion .list-group-item-header").click(function(event){
+      $(this).find(".fa-angle-right").toggleClass("fa-angle-down")
+        .end().parent().toggleClass("list-view-pf-expand-active")
+          .find(".list-group-item-container").toggleClass("hidden");
+    })
+
+  });
+</script>
 {% endblock %}

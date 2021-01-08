@@ -9,17 +9,61 @@
 {% elif field.type == 'HiddenField' %}
     {{ field }}
 {% else %}
-<fieldset class="form-field">
-    {{ field.label }}
-    {{ field }}
-    {% if field.errors %}
-        <ul class="errors">
-            {% for error in field.errors %}
-            <li>{{ error }}</li>
+    <div class="list-group-item">
+        <div class="list-group-item-header">
+            {% if field.type != 'SubmitField' %}
+                <div class="list-view-pf-expand">
+                    <span class="fa fa-angle-right"></span>
+                </div>
+            {% endif %}
+            <div class="list-view-pf-main-info">
+                <div class="list-view-pf-body">
+                    {% if field.type == 'SubmitField' %}
+                        <div class="list-view-pf-right">
+                            {{ field }}
+                        </div>
+                    {% else %}
+                        <div class="list-view-pf-description">
+                            <div class="list-group-item-heading">
+                                {{ field.label }}
+                            </div>
+                            <div class="list-group-item-text">
+                                {{ field.description }}
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% if field.type != 'SubmitField' %}
+            {% for subfield in field %}
+                {% if subfield.type != 'SubmitField' and subfield.type != 'CSRFTokenField' %}
+                <div class="list-group-item-container container-fluid hidden">
+                    <div class="list-group-item">
+                        <div class="list-group-item-heading">
+                            {{ subfield.label }}
+                        </div>
+                        <div class="list-group-item-text">
+                            {{ subfield.description }}
+                        </div>
+                        <div class="list-view-pf-additional-info">
+                            <fieldset class="form-field">
+                                {{ subfield(class_="empty") }}
+                            </fieldset>
+                            {% if subfield.errors %}
+                                <ul class="errors">
+                                    {% for error in subfield.errors %}
+                                    <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
             {% endfor %}
-        </ul>
-    {% endif %}
-</fieldset>
+        {% endif %}
+    </div>
 {% endif %}
 
 {%- endmacro %}
