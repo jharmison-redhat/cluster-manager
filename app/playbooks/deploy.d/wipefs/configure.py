@@ -3,9 +3,7 @@ import sys
 import pickle
 import yaml
 from collections import defaultdict
-import ansible.parsing.yaml.objects
-import ansible.utils.unsafe_proxy
-from PyInquirer import Token, prompt, Separator
+from PyInquirer import prompt, Separator
 
 
 def checkbox(prompt_label, options, cache=None):
