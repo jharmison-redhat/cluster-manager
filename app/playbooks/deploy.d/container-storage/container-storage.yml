@@ -2,7 +2,8 @@
   hosts: localhost
   become: no
   gather_facts: no
-
+  vars_files:
+    - /data/drives.yml
   tasks:
     - name: ensure project exists
       k8s:

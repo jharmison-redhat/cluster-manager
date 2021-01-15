@@ -2,20 +2,9 @@
   hosts: localhost
   become: no
   gather_facts: no
-
+  vars_files:
+    - /data/drives.yml
   tasks:
-    - name: get storage node drive id paths
-      shell: "oc debug -n default node/{{ item }} -- chroot /host find /dev/disk/by-id -type l -exec readlink -nf {} ';' -exec echo ': {}' ';' | egrep '(wwn|eui)' | sed 's/\\/dev\\///'"
-      loop: "{{ stg_drives | json_query('[*].host') }}"
-      register: drive_id_lkp
-      changed_when: no
-
-    - name: save storage node drive id paths
-      set_fact:
-        drive_ids: "{{ drive_ids|default({}) | combine({ item.item : item.stdout | from_yaml }) }}"
-      loop: "{{ drive_id_lkp.results }}"
-      changed_when: no
-
     - name: ensure project exists
       k8s:
         state: present
@@ -73,11 +62,6 @@
       retries: 60
       delay: 15
 
-    - name: lookup storage device id paths
-      set_fact:
-        stg_devices: "{{ stg_devices|default([]) + [ drive_ids[item.0.host][item.1] ] }}"
-      loop: "{{ lookup('subelements', stg_drives, 'drives') }}"
-
     - name: ensure storage nodes are labeled
       k8s:
         state: present
@@ -89,7 +73,7 @@
             labels:
               cluster.ocs.openshift.io/openshift-storage: ""
       loop: "{{ cluster_nodes }}"
-      when: "item in stg_nodes"
+      when: "item in use_drives"
 
     - name: ensure non-storage nodes are not labeled
       k8s:
@@ -102,7 +86,7 @@
             labels:
               cluster.ocs.openshift.io/openshift-storage: null
       loop: "{{ cluster_nodes }}"
-      when: "item not in stg_nodes"
+      when: "item not in use_drives"
 
     - name: create localvolume object
       k8s:
@@ -117,9 +101,12 @@
             nodeSelector:
               nodeSelectorTerms:
               - matchExpressions:
-                  - key: cluster.ocs.openshift.io/openshift-storage
-                    operator: Exists
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                    - "{{ item.key }}"
             storageClassDevices:
               - storageClassName: localblock
                 volumeMode: Block
-                devicePaths: "{{ stg_devices }}"
+                devicePaths: "{{ item.value }}"
+      loop: "{{ lookup('dict', use_drives) }}"
