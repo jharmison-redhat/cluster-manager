@@ -96,3 +96,5 @@
               portable: false
               replica: 3
               resources: {}
+      retries: 4
+      delay: 15
