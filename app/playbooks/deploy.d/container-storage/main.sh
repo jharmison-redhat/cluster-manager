@@ -2,7 +2,7 @@
 
 ME=$(dirname $0)
 
-[ -f /data/drives.yml ] || detect drives
+[ -f /data/drives.yml ] || cli/detect drives
 python3 $ME/configure.py $@ || exit 1
 
 ansible-playbook $ME/local-storage.yml $@ || exit 1
