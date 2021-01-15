@@ -56,6 +56,7 @@ if use_drives is None:
 
     with open(drives_file, 'w') as f:
         yaml.safe_dump({
+            'cluster_nodes': [node for node in possible_drives.keys()],
             'drive_data': drives,
             'use_drives': use_drives,
             'drives_per_node': drives_per_node
