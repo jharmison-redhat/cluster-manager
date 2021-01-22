@@ -6,5 +6,3 @@ data
 venv
 devel.env
 data.tgz
-config/faros_config_ui/faros_config_ui/static/*
-!config/faros_config_ui/faros_config_ui/static/.gitkeep
